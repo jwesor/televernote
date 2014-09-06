@@ -8,7 +8,6 @@ public class MorseTests {
 		System.out.println("Morse test...");
 		Transcriber t = new Transcriber();
 		int d = 125;
-		t.begin();
 		//a
 		t.tap(0, d);
 		t.tap(d, d*4);
@@ -25,8 +24,6 @@ public class MorseTests {
 		t.tap(d*33, d*34);
 		t.tap(d*35, d*36);
 		t.tap(d*37, d*40);
-
-		t.end();
 
 		Decoder de = new Decoder();
 		String morse = de.decode(t.getTaps());

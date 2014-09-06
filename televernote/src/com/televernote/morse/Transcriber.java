@@ -11,40 +11,45 @@ import java.util.List;
 public class Transcriber {
 	private List<Tap> taps;
 	private List<Long> timestamps;
-	private boolean transcribing;
+	private Decoder decoder;
 
 	public Transcriber() {
 		taps = new ArrayList<Tap>();
 		timestamps = new ArrayList<Long>();
-		transcribing = false;
 	}
 
-	public void begin() {
-		if (transcribing)
-			return;
-		transcribing = true;
+	public void clear() {
 		taps.clear();
 		timestamps.clear();
+
+		if (decoder != null)
+			decoder.clear();
 	}
 
 	public void tap(long startTime, long endTime) {
-		if (!transcribing)
-			return;
+		boolean skipGap = timestamps.isEmpty();
+
+		if (!skipGap) {
+			long lastEnd = timestamps.get(timestamps.size() - 1);
+			Tap gapTap = new Tap(lastEnd, startTime, false);
+			taps.add(gapTap);
+			if (decoder != null)
+				decoder.addToDecodeBuffer(gapTap);
+		}
+
+		Tap tap = new Tap(startTime, endTime, true);
+		taps.add(tap);
+		if (decoder != null)
+			decoder.addToDecodeBuffer(tap);
+
 		timestamps.add(startTime);
 		timestamps.add(endTime);
+
 	}
 
-	public void end() {
-		if (!transcribing)
-			return;
-		transcribing = false;
-		boolean tap = true;
-		for (int i = 0; i < timestamps.size() - 1; i ++) {
-			taps.add(new Tap(timestamps.get(i), timestamps.get(i + 1), tap));
-			tap = !tap;
-		}
+	public void setDecoder(Decoder decoder) {
+		this.decoder = decoder;
 	}
-
 	public List<Tap> getTaps() {
 		return taps;
 	}

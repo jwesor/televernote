@@ -52,11 +52,13 @@ public class Decoder {
 	}
 
 	private HashMap<String, String> table;
+	private StringBuffer buffer;
 	private long timeUnit;
 
 	public Decoder() {
 		table = DEFAULT_TABLE;
 		timeUnit = DEFAULT_TIME_UNIT;
+		buffer = new StringBuffer();
 	}
 
 	public String decodeAndTranslate(List<Tap> taps) {
@@ -79,9 +81,25 @@ public class Decoder {
 			if (table.containsKey(morseChar)) {
 				message.append(table.get(morseChar));
 			} else {
-				message.append(NULL_CHAR);
+				message.append(morseChar);
 			}
 		}
 		return message.toString();
+	}
+
+	public void clear() {
+		buffer = new StringBuffer();
+	}
+
+	public void addToDecodeBuffer(Tap tap) {
+		buffer.append(tap.decode(timeUnit).toString());
+	}
+
+	public String getMorseBuffer() {
+		return buffer.toString();
+	}
+
+	public String getTranslatedMorseBuffer() {
+		return translate(buffer.toString());
 	}
 }

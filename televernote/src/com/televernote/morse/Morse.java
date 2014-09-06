@@ -1,6 +1,6 @@
 package com.televernote.morse;
 
-public enum Morse {
+enum Morse {
 	DOT, DASH, GAP, CHAR, SPACE;
 
 	@Override
