@@ -1,11 +1,12 @@
 package com.televernote;
 
-import com.evernote.client.android.EvernoteSession;
-
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.evernote.client.android.EvernoteSession;
+import com.televernote.tests.MorseTests;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -13,7 +14,7 @@ public class MainActivity extends ActionBarActivity {
 	// Please obfuscate your code to help keep these values secret.
 	private static final String CONSUMER_KEY = "eric5";
 	private static final String CONSUMER_SECRET = "c286186b14af5124";
-	
+
 	// Initial development is done on Evernote's testing service, the sandbox.
 	// Change to HOST_PRODUCTION to use the Evernote production service
 	// once your code is complete, or HOST_CHINA to use the Yinxiang Biji
@@ -30,9 +31,9 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-	    //Set up the Evernote Singleton Session
-	    mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
+		MorseTests.execute();
+		//Set up the Evernote Singleton Session
+		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
 	}
 
 	@Override

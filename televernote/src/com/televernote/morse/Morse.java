@@ -1,7 +1,7 @@
 package com.televernote.morse;
 
 public enum Morse {
-	DOT, DASH, CHAR, SPACE;
+	DOT, DASH, GAP, CHAR, SPACE;
 
 	@Override
 	public String toString() {

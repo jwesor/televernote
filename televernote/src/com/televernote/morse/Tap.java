@@ -20,9 +20,9 @@ public class Tap {
 		if (tap) {
 			int dot = Math.abs(units - 1);
 			int dash = Math.abs(units - 3);
-			return (dot < dash) ? Morse.DOT : Morse.DASH;
+			return (dot <= dash) ? Morse.DOT : Morse.DASH;
 		} else {
-			return Morse.CHAR;
+			return (units <= 2) ? Morse.GAP : Morse.CHAR;
 		}
 	}
 }
