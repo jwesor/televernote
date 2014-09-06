@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="new_telegram">New Telegram</string>
     <string name="title_activity_telegraph">Telegraph</string>
+    <string name="title_activity_messages">Messages</string>
     <string name="telegraph">Telegraph</string>
 
 </resources>

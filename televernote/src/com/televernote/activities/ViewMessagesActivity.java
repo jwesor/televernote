@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import com.televernote.R;
+import com.televernote.evernote.EvernoteInteractor;
 import com.televernote.morse.Transcriber;
 
 public class ViewMessagesActivity extends Activity {
@@ -42,9 +44,12 @@ public class ViewMessagesActivity extends Activity {
         messagesView.setAdapter(messageAdapter);
         
         newMessage = (Button) findViewById(R.id.new_button);
+        final Context me = this;
         newMessage.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
     			//startActivity(new Intent(getApplicationContext(), TelegraphActivity.class));
+        		System.out.println("Test debug");
+        		EvernoteInteractor.addUser(me, "jwesor@gmail.com");
         	}
         });
         //logOff = (Button) findViewById(R.id.log_off);

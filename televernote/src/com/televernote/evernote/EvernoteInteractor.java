@@ -7,24 +7,27 @@ import android.content.Context;
 import android.util.Log;
 
 import com.evernote.client.android.AsyncNoteStoreClient;
-import com.evernote.client.android.AsyncUserStoreClient;
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.client.android.OnClientCallback;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Notebook;
+import com.evernote.edam.type.SharedNotebook;
+import com.evernote.edam.type.SharedNotebookPrivilegeLevel;
 import com.evernote.thrift.transport.TTransportException;
 
 public class EvernoteInteractor {
 	private static final String LOGTAG = "EvernoteInteractor";
 	
-	private static final String CONSUMER_KEY = "eric5";
-	private static final String CONSUMER_SECRET = "c286186b14af5124";
+	private static final String CONSUMER_KEY = "eric5-5494";
+	private static final String CONSUMER_SECRET = "2b514688c7e57a5d";
 
 	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
 
 	private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
+	private static List<Notebook> currentNotebooks;
+	
 	// Current evernote session
 
 	private static EvernoteSession getSession(Context session) {
@@ -46,6 +49,7 @@ public class EvernoteInteractor {
 				public void onSuccess(final List<Notebook> notebooks) {
 					List<String> namesList = new ArrayList<String>(notebooks.size());
 					boolean hasInitial = false;
+					currentNotebooks = notebooks.subList(0, notebooks.size());
 			        for (Notebook notebook : notebooks) {
 			        	namesList.add(notebook.getName());
 			        	//lol@hardcoded in strings
@@ -56,7 +60,8 @@ public class EvernoteInteractor {
 			        if (!hasInitial) {
 			        	//make new notes
 			        	try {
-							createNote(mEvernoteSession, "Televernote Info", "Televernote!");
+							//createNote(mEvernoteSession, "Televernote Info", "Televernote!");
+			        		createNotebook(mEvernoteSession, "Televernote Info");
 						} catch (TTransportException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -76,16 +81,84 @@ public class EvernoteInteractor {
 			e.printStackTrace();
 		}
 	}
-	public static void createNotebook(Context context) throws TTransportException {
+	//where user is the email of the user you wish to add
+	public static void addUser(Context context, String user) {
+		final String f_user = user;
+		final EvernoteSession mEvernoteSession = getSession(context);
+		for (Notebook notebook : currentNotebooks) {
+        	if (notebook.getName().equals("user")) {
+        		//already have this user added
+        		return;
+        	}
+        }
+		try {
+			
+			Notebook notebook = new Notebook();
+			notebook.setGuid(notebook.getGuid());
+			notebook.setName(user);
+			notebook.setStack("Televernote");
+			
+			
+			mEvernoteSession.getClientFactory().createNoteStoreClient().createNotebook(notebook,  new OnClientCallback<Notebook>() {
+				@Override
+				public void onSuccess(Notebook data) {
+					// TODO Auto-generated method stub
+					currentNotebooks.add(data);
+					SharedNotebook shared = new SharedNotebook();
+					shared.setNotebookGuid(data.getGuid());
+					shared.setAllowPreview(true);
+					shared.setPrivilege(SharedNotebookPrivilegeLevel.MODIFY_NOTEBOOK_PLUS_ACTIVITY);
+					shared.setEmail(f_user);
+					try {
+						mEvernoteSession.getClientFactory().createNoteStoreClient().createSharedNotebook(shared,  new OnClientCallback<SharedNotebook>() {
+							@Override
+							public void onSuccess(SharedNotebook data) {
+								// TODO Auto-generated method stub
+								
+							}
+
+							@Override
+							public void onException(Exception exception) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+						
+						});
+					} catch (TTransportException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				@Override
+				public void onException(Exception exception) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			
+			
+		} catch (TTransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void createNotebook(Context context, String name) throws TTransportException {
 		EvernoteSession mEvernoteSession = getSession(context);
-		
+		createNotebook(mEvernoteSession, name);
+	}
+	public static void createNotebook(EvernoteSession mEvernoteSession, String name) throws TTransportException {
 		Notebook notebook = new Notebook();
 		notebook.setGuid(notebook.getGuid());
+		notebook.setName(name);
+		notebook.setStack("Televernote");
 		
 		mEvernoteSession.getClientFactory().createNoteStoreClient().createNotebook(notebook,  new OnClientCallback<Notebook>() {
 			@Override
 			public void onSuccess(Notebook data) {
-				// TODO Auto-generated method stub				
+				// TODO Auto-generated method stub
+				currentNotebooks.add(data);
 			}
 			@Override
 			public void onException(Exception exception) {
@@ -95,14 +168,15 @@ public class EvernoteInteractor {
 			
 		});
 	}
-	public static void createNote(Context context, String title, String content) throws TTransportException {
+	public static void createNote(Context context, String title, String content, String notebookGuid) throws TTransportException {
 		EvernoteSession mEvernoteSession = getSession(context);
-		createNote(mEvernoteSession, title, content);
+		createNote(mEvernoteSession, title, content, notebookGuid);
 	}
-	public static void createNote(EvernoteSession mEvernoteSession, String title, String content) throws TTransportException {
+	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String notebookGuid) throws TTransportException {
 		if (mEvernoteSession.isLoggedIn()) {
 			Note note = new Note();
 			note.setTitle(title);
+			note.setNotebookGuid(notebookGuid);
 			note.setContent(EvernoteUtil.NOTE_PREFIX + content + EvernoteUtil.NOTE_SUFFIX);
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNote(note, new OnClientCallback<Note>() {
 				@Override

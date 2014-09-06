@@ -15,8 +15,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 	
-	private static final String CONSUMER_KEY = "eric5";
-	private static final String CONSUMER_SECRET = "c286186b14af5124";
+	private static final String CONSUMER_KEY = "eric5-5494";
+	private static final String CONSUMER_SECRET = "2b514688c7e57a5d";
 	
 	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
 
@@ -25,6 +25,8 @@ public class MainActivity extends ActionBarActivity {
 	// Current evernote session
 	private EvernoteSession mEvernoteSession;
 	
+	private boolean tryingToLog = false;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -32,6 +34,13 @@ public class MainActivity extends ActionBarActivity {
 		MorseTests.execute();
 		//Set up the Evernote Singleton Session
 		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
+		if (!tryingToLog && !mEvernoteSession.isLoggedIn()) {
+			tryingToLog = true;
+	    	mEvernoteSession.authenticate(this);
+	    }
+		else {
+			tryingToLog = true;
+		}
 	}
 
 	
@@ -57,9 +66,7 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!mEvernoteSession.isLoggedIn()) {
-	    	mEvernoteSession.authenticate(this);
-	    }
+		System.out.println("Resuming");
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -68,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
 	    	// Update UI when oauth activity returns result
 	    	case EvernoteSession.REQUEST_CODE_OAUTH:
 	    		if (resultCode == Activity.RESULT_OK) {
+	    			System.out.println("Logged successfully");
 	    			// Authentication was successful, do what you need to do in your app
 	    			
 	    			//check if this is the first time user is using this app; set up appropriate stacks
@@ -77,6 +85,7 @@ public class MainActivity extends ActionBarActivity {
 	    			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
 	    		}
 	    		else {
+	    			System.out.println("??");
 	    			// Goto screen prompting user to log in?
 	    			//startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 	    		}
