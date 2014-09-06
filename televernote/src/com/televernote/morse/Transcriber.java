@@ -44,4 +44,8 @@ public class Transcriber {
 			tap = !tap;
 		}
 	}
+
+	public List<Tap> getTaps() {
+		return taps;
+	}
 }

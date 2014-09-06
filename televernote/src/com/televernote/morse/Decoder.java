@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 public class Decoder {
-	private static long DEFAULT_TIME_UNIT = 100;
+	private static long DEFAULT_TIME_UNIT = 125;
 	private static String NULL_CHAR = "?";
 	private static HashMap<String, String> DEFAULT_TABLE = new HashMap<String, String>();
 	static {
@@ -59,12 +59,20 @@ public class Decoder {
 		timeUnit = DEFAULT_TIME_UNIT;
 	}
 
+	public String decodeAndTranslate(List<Tap> taps) {
+		return translate(decode(taps));
+	}
+
 	public String decode(List<Tap> taps) {
 		StringBuffer morseBuffer = new StringBuffer();
 		for (Tap tap: taps) {
 			morseBuffer.append(tap.decode(timeUnit).toString());
 		}
 		String morse = morseBuffer.toString();
+		return morse;
+	}
+
+	public String translate(String morse) {
 		String[] morseChars = morse.split(Morse.CHAR.toString());
 		StringBuffer message = new StringBuffer(morseChars.length);
 		for (String morseChar: morseChars) {
