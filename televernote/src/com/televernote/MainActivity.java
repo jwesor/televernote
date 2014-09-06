@@ -2,9 +2,11 @@ package com.televernote;
 
 import com.evernote.client.android.EvernoteSession;
 import com.televernote.activities.ViewMessagesActivity;
+import com.televernote.evernote.EvernoteInteractor;
 import com.televernote.tests.MorseTests;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -69,7 +71,8 @@ public class MainActivity extends ActionBarActivity {
 	    			// Authentication was successful, do what you need to do in your app
 	    			
 	    			//check if this is the first time user is using this app; set up appropriate stacks
-	    				
+	    			EvernoteInteractor.initializeIfNeeded(this);
+	    			
 	    			// Goto screen showing my messages
 	    			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
 	    		}
