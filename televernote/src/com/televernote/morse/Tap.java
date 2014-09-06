@@ -5,7 +5,7 @@ package com.televernote.morse;
  * @author jwesor
  *
  */
-public class Tap {
+class Tap {
 	private long start, end;
 	private boolean tap; //true if tap, false if pause
 
