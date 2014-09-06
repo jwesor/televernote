@@ -48,4 +48,7 @@ public class Transcriber {
 	public List<Tap> getTaps() {
 		return taps;
 	}
+	public String getTitle() {
+		return "Fill this in";
+	}
 }

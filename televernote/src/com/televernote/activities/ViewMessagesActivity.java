@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import com.televernote.R;
-import com.televernote.morse.Message;
+import com.televernote.morse.Transcriber;
 
 public class ViewMessagesActivity extends Activity {
 	
@@ -19,7 +19,7 @@ public class ViewMessagesActivity extends Activity {
 	
 	private Button newMessage;
 	
-	private List<Message> messages;
+	private List<Transcriber> messages;
 	private List<String> messageTitles;
 	private ArrayAdapter<String> messageAdapter;
 	
@@ -27,14 +27,14 @@ public class ViewMessagesActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         messageTitles = new ArrayList<String>();
-        messages = new ArrayList<Message>();
+        messages = new ArrayList<Transcriber>();
         
         setContentView(R.layout.view_messages);
         messagesView = (ListView) findViewById(R.id.message_list);
         messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	public void onItemClick(AdapterView parent, View view, int position, long id) {
         		//read message at int position
-        		Message msg = messages.get(position);
+        		Transcriber msg = messages.get(position);
         		//open this message
         	}
 		});
@@ -49,7 +49,7 @@ public class ViewMessagesActivity extends Activity {
         });
         //logOff = (Button) findViewById(R.id.log_off);
     }
-	public void addMessageToListView(Message msg) {
+	public void addMessageToListView(Transcriber msg) {
 		messages.add(msg);
 		String title = msg.getTitle();
 		messageTitles.add(title);
