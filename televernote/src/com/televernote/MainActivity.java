@@ -1,34 +1,27 @@
 package com.televernote;
 
 import com.evernote.client.android.EvernoteSession;
+import com.televernote.activities.ViewMessagesActivity;
+import com.televernote.tests.MorseTests;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
-
-	// Your Evernote API key. See http://dev.evernote.com/documentation/cloud/
-	// Please obfuscate your code to help keep these values secret.
+	
 	private static final String CONSUMER_KEY = "eric5";
 	private static final String CONSUMER_SECRET = "c286186b14af5124";
 	
-	// Initial development is done on Evernote's testing service, the sandbox.
-	// Change to HOST_PRODUCTION to use the Evernote production service
-	// once your code is complete, or HOST_CHINA to use the Yinxiang Biji
-	// (Evernote China) production service.
 	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
 
-	// Current evernote session
-	protected EvernoteSession mEvernoteSession;
-
-	// Set this to true if you want to allow linked notebooks for accounts that can only access a single
-	// notebook.
 	private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
+
+	// Current evernote session
+	private EvernoteSession mEvernoteSession;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +67,11 @@ public class MainActivity extends ActionBarActivity {
 	    	case EvernoteSession.REQUEST_CODE_OAUTH:
 	    		if (resultCode == Activity.RESULT_OK) {
 	    			// Authentication was successful, do what you need to do in your app
+	    			
+	    			//check if this is the first time user is using this app; set up appropriate stacks
+	    				
 	    			// Goto screen showing my messages
-	    			//startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
+	    			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
 	    		}
 	    		else {
 	    			// Goto screen prompting user to log in?
