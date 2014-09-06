@@ -11,9 +11,9 @@ enum Morse {
 		case DASH:
 			return "-";
 		case CHAR:
-			return "'";
-		case SPACE:
 			return " ";
+		case SPACE:
+			return "  ";
 		default:
 			return "";
 		}
