@@ -33,20 +33,28 @@ public class TelegraphBeeper implements OnTouchListener {
 			return false;
 		switch (event.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
-			media.start();
-			activity.tapDown();
-			v.performClick();
+			tapDown(v);
 			break;
 		case MotionEvent.ACTION_UP:
-			media.pause();
-			activity.tapUp();
-			v.performClick();
+			tapUp(v);
 			break;
 		}
 		return true;
 	}
 
-	public void dispose() {
+	void tapDown(View v) {
+		media.start();
+		activity.tapDown();
+		v.performClick();
+	}
+
+	void tapUp(View v) {
+		media.pause();
+		activity.tapUp();
+		v.performClick();
+	}
+
+	void dispose() {
 		media.stop();
 	}
 

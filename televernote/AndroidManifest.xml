@@ -26,12 +26,16 @@
             android:name="com.evernote.client.android.EvernoteOAuthActivity"
             android:configChanges="orientation|keyboardHidden" />
         <activity
-            android:name="com.televernote.telegraph.TelegraphActivity"
+            android:name=".telegraph.TelegraphActivity"
             android:label="@string/title_activity_telegraph" >
         </activity>
         <activity
             android:name="com.televernote.activities.ViewMessagesActivity"
             android:label="@string/title_activity_messages" >
+		</activity>
+		<activity>
+            android:name="com.televernote.telegraph.ReceiverActivity"
+            android:label="@string/title_activity_receiver" >
         </activity>
     </application>
 

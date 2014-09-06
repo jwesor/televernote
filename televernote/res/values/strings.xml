@@ -8,5 +8,6 @@
     <string name="title_activity_telegraph">Telegraph</string>
     <string name="title_activity_messages">Messages</string>
     <string name="telegraph">Telegraph</string>
+    <string name="title_activity_receiver">ReceiverActivity</string>
 
 </resources>
