@@ -185,7 +185,13 @@ public class EvernoteInteractor {
 			tags.add("televernote");
 			
 			Note note = new Note();
-			note.setTitle(title);
+			//note.setTitle(title);
+			if (content.length() >= 5) {
+				note.setTitle(content.substring(0, 4));
+			}
+			else {
+				note.setTitle(content);
+			}
 			String nbGuid = getNotebookGUIDForUser(recipient);
 			note.setNotebookGuid(nbGuid);
 			//note.setTagGuids(tags);
@@ -196,7 +202,7 @@ public class EvernoteInteractor {
 				public void onSuccess(final Note data) {
 					//Toast.makeText(getApplicationContext(), data.getTitle() + " has been created", Toast.LENGTH_LONG).show();
 					try {
-						mEvernoteSession.getClientFactory().createNoteStoreClient().setNoteApplicationDataEntry(data.getGuid(), "timestamp data", timeData, new OnClientCallback<Integer>() {
+						mEvernoteSession.getClientFactory().createNoteStoreClient().setNoteApplicationDataEntry(data.getGuid(), "timestamp", timeData, new OnClientCallback<Integer>() {
 							@Override
 							public void onSuccess(Integer data) {
 								// TODO Auto-generated method stub
@@ -284,7 +290,7 @@ public class EvernoteInteractor {
 	public static void unpackageNodeData(Context context, Note note, final ViewMessagesActivity sender, final int index) {
 		EvernoteSession mEvernoteSession = getSession(context);
 		try {
-			mEvernoteSession.getClientFactory().createNoteStoreClient().getNoteApplicationDataEntry(note.getGuid(),"timestamp data", new OnClientCallback<String>() {
+			mEvernoteSession.getClientFactory().createNoteStoreClient().getNoteApplicationDataEntry(note.getGuid(),"timestamp", new OnClientCallback<String>() {
 				@Override
 				public void onSuccess(String data) {
 					// TODO Auto-generated method stub

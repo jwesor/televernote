@@ -33,8 +33,14 @@ public class ViewMessagesActivity extends Activity {
 	private List<String> messageTitles;
 	private ArrayAdapter<String> messageAdapter;
 	
+	
+	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+	}
+	@Override
+	protected void onResume() {
+		super.onResume();
         
         messageTitles = new ArrayList<String>();
         messageDatum = new ArrayList<String>();
@@ -97,7 +103,8 @@ public class ViewMessagesActivity extends Activity {
 		for(Note n: notes) {
 			String title = n.getTitle();
 			messageTitles.add(title);
-			messageAdapter.add(title);
+			//messageAdapter.add(title);
+			messageAdapter.notifyDataSetChanged();
 			EvernoteInteractor.unpackageNodeData(this, n, this, index);
 			index++;
 		}
@@ -105,10 +112,16 @@ public class ViewMessagesActivity extends Activity {
 	public void startViewData(String data) {
 		Intent intent = new Intent(this, ReceiverActivity.class);
 		intent.putExtra(ReceiverActivity.TIMESTAMPS_KEY, data);
+		intent.putExtra(ReceiverActivity.SENDER_KEY, "eric5@berkeley.edu");
 		startActivity(intent);
 	}
 	public void receiveData(String data, int index) {
-		messageDatum.set(index, data);
+		if (index >= messageDatum.size()) {
+			messageDatum.add(data);
+		}
+		else {
+			messageDatum.set(index, data);
+		}
 		System.out.println("Message received " + index);
 	}
 }
