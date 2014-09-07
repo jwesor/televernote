@@ -1,6 +1,7 @@
 package com.televernote.morse;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,6 +13,8 @@ public class Transcriber {
 	private List<Tap> taps;
 	private List<Long> timestamps;
 	private Decoder decoder;
+
+	public static String DELIM = ",";
 
 	public Transcriber() {
 		taps = new ArrayList<Tap>();
@@ -50,10 +53,24 @@ public class Transcriber {
 	public void setDecoder(Decoder decoder) {
 		this.decoder = decoder;
 	}
+
 	public List<Tap> getTaps() {
 		return taps;
 	}
+
+	public String getTimestampData() {
+		StringBuffer buffer = new StringBuffer();
+		for (Long time: timestamps) {
+			buffer.append(time.toString() + DELIM);
+		}
+		return buffer.toString();
+	}
+
+	@SuppressWarnings("deprecation")
 	public String getTitle() {
-		return "Fill this in";
+		if (timestamps.isEmpty())
+			return "?";
+		Date date = new Date(timestamps.get(0));
+		return date.toGMTString();
 	}
 }

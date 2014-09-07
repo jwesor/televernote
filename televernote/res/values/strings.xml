@@ -9,5 +9,8 @@
     <string name="title_activity_messages">Messages</string>
     <string name="telegraph">Telegraph</string>
     <string name="title_activity_receiver">ReceiverActivity</string>
+    <string name="send_message">Transmit</string>
+    <string name="replay_message">Replay Transmission</string>
+    <string name="title_activity_transmitter">TransmitterActivity</string>
 
 </resources>

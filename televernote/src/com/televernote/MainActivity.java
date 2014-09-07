@@ -1,32 +1,33 @@
 package com.televernote;
 
-import com.evernote.client.android.EvernoteSession;
-import com.televernote.activities.ViewMessagesActivity;
-import com.televernote.evernote.EvernoteInteractor;
-import com.televernote.tests.MorseTests;
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.evernote.client.android.EvernoteSession;
+import com.televernote.morse.Decoder;
+import com.televernote.telegraph.ReceiverActivity;
+import com.televernote.tests.MorseTests;
+
+
+
 public class MainActivity extends ActionBarActivity {
-	
+
 	private static final String CONSUMER_KEY = "eric5-5494";
 	private static final String CONSUMER_SECRET = "2b514688c7e57a5d";
-	
+
+
 	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
 
 	private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
 	// Current evernote session
 	private EvernoteSession mEvernoteSession;
-	
+
 	private boolean tryingToLog = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,15 +37,15 @@ public class MainActivity extends ActionBarActivity {
 		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
 		if (!tryingToLog && !mEvernoteSession.isLoggedIn()) {
 			tryingToLog = true;
-	    	mEvernoteSession.authenticate(this);
-	    }
+			mEvernoteSession.authenticate(this);
+		}
 		else {
 			tryingToLog = true;
 		}
 	}
 
-	
-	
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -63,6 +64,8 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+	/*
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -77,10 +80,10 @@ public class MainActivity extends ActionBarActivity {
 	    		if (resultCode == Activity.RESULT_OK) {
 	    			System.out.println("Logged successfully");
 	    			// Authentication was successful, do what you need to do in your app
-	    			
+
 	    			//check if this is the first time user is using this app; set up appropriate stacks
 	    			EvernoteInteractor.initializeIfNeeded(this);
-	    			
+
 	    			// Goto screen showing my messages
 	    			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
 	    		}
@@ -91,5 +94,29 @@ public class MainActivity extends ActionBarActivity {
 	    		}
 	    		break;
 		}
+	 */
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		//Intent intent = new Intent(this, TelegraphActivity.class);
+		Intent intent = new Intent(this, ReceiverActivity.class);
+		long d = Decoder.DEFAULT_TIME_UNIT;
+		long[] timestamps = new long[]{
+				d*0, d*1,
+				d*2, d*5,
+
+				d*8, d*11,
+				d*12, d*13,
+				d*14, d*15,
+				d*16, d*17,
+
+				d*20, d*23,
+				d*24, d*25,
+				d*25, d*28,
+				d*29, d*30
+		};
+		intent.putExtra(ReceiverActivity.TIMESTAMPS_KEY, timestamps);
+		startActivity(intent);
 	}
 }
