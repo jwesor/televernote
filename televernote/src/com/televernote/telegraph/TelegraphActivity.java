@@ -19,11 +19,16 @@ public abstract class TelegraphActivity extends ActionBarActivity  {
 	protected TelegraphView telegraphView;
 	protected TextView text;
 	protected Button button;
+	protected String recipient;
+
+	public static String RECIPIENT_KEY = "recipient";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_telegraph);
+
+		recipient = getIntent().getExtras().getString(RECIPIENT_KEY);
 
 		beeper = new TelegraphBeeper(this);
 
