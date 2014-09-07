@@ -28,6 +28,7 @@ public class ReceiverActivity extends TelegraphActivity {
 		Bundle bundle = getIntent().getExtras();
 		times = bundle.getLongArray("timestamps");
 		sender = bundle.getString(SENDER_KEY);
+		updateText();
 		index = 0;
 		button.setText(R.string.replay_message);
 		initialTap();
