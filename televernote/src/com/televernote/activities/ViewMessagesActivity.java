@@ -11,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.evernote.edam.type.Note;
+import com.evernote.thrift.transport.TTransportException;
 import com.televernote.R;
 import com.televernote.evernote.EvernoteInteractor;
 import com.televernote.morse.Transcriber;
@@ -50,6 +53,14 @@ public class ViewMessagesActivity extends Activity {
     			//startActivity(new Intent(getApplicationContext(), TelegraphActivity.class));
         		System.out.println("Test debug");
         		EvernoteInteractor.addUser(me, "jwesor@gmail.com");
+        		try {
+					EvernoteInteractor.createNote(me, "03/09/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
+					EvernoteInteractor.createNote(me, "03/31/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
+					EvernoteInteractor.createNote(me, "05/09/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
+				} catch (TTransportException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
         	}
         });
         //logOff = (Button) findViewById(R.id.log_off);
@@ -60,7 +71,7 @@ public class ViewMessagesActivity extends Activity {
 		messageTitles.add(title);
 		messageAdapter.add(title);
 	}
-	public void fetchMessages() {
+	public void receiveNotes(List<Note> notes) {
 		
 	}
 }

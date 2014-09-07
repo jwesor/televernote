@@ -10,13 +10,19 @@ import com.evernote.client.android.AsyncNoteStoreClient;
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.client.android.OnClientCallback;
+import com.evernote.edam.notestore.NoteFilter;
+import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.SharedNotebook;
 import com.evernote.edam.type.SharedNotebookPrivilegeLevel;
 import com.evernote.thrift.transport.TTransportException;
+import com.televernote.activities.ViewMessagesActivity;
 
 public class EvernoteInteractor {
+	
+	private static final String PREFIXER = "Televernote: ";
+	
 	private static final String LOGTAG = "EvernoteInteractor";
 	
 	private static final String CONSUMER_KEY = "eric5-5494";
@@ -86,7 +92,7 @@ public class EvernoteInteractor {
 		final String f_user = user;
 		final EvernoteSession mEvernoteSession = getSession(context);
 		for (Notebook notebook : currentNotebooks) {
-        	if (notebook.getName().equals("user")) {
+        	if (notebook.getName().equals(PREFIXER+"user")) {
         		//already have this user added
         		return;
         	}
@@ -95,7 +101,7 @@ public class EvernoteInteractor {
 			
 			Notebook notebook = new Notebook();
 			notebook.setGuid(notebook.getGuid());
-			notebook.setName(user);
+			notebook.setName(PREFIXER+user);
 			notebook.setStack("Televernote");
 			
 			
@@ -173,10 +179,13 @@ public class EvernoteInteractor {
 		createNote(mEvernoteSession, title, content, notebookGuid);
 	}
 	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String notebookGuid) throws TTransportException {
+		List<String> tags = new ArrayList<String>();
+		tags.add("televernote");
 		if (mEvernoteSession.isLoggedIn()) {
 			Note note = new Note();
 			note.setTitle(title);
 			note.setNotebookGuid(notebookGuid);
+			note.setTagGuids(tags);
 			note.setContent(EvernoteUtil.NOTE_PREFIX + content + EvernoteUtil.NOTE_SUFFIX);
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNote(note, new OnClientCallback<Note>() {
 				@Override
@@ -189,5 +198,55 @@ public class EvernoteInteractor {
 				}
 			});
 		}
+	}
+	public static String getNotebookGUIDForUser(String user) {
+		String name;
+		for (Notebook notebook: currentNotebooks) {
+			name = notebook.getName();
+			if (name.startsWith(PREFIXER)) {
+				if (name.equals(PREFIXER + user)) {
+					//this is the notebook we want
+					return notebook.getGuid();
+				}
+			}
+		}
+		return "";
+	}
+	public static void getAllMessages(Context context, final ViewMessagesActivity sender) {
+		List<String> tags = new ArrayList<String>();
+		tags.add("televernote");
+		
+		EvernoteSession mEvernoteSession = getSession(context);
+		String name;
+		for (Notebook notebook: currentNotebooks) {
+			name = notebook.getName();
+			if (name.startsWith(PREFIXER)) {
+				
+			}
+		}
+		NoteFilter filter = new NoteFilter();
+		filter.setTagGuids(tags);
+		filter.setAscending(true);
+		try {
+			mEvernoteSession.getClientFactory().createNoteStoreClient().findNotes(filter, 0, 50, new OnClientCallback<NoteList> () {
+				@Override
+				public void onSuccess(NoteList data) {
+					// TODO Auto-generated method stub
+					List<Note> notes = data.getNotes();
+					sender.receiveNotes(notes);
+				}
+
+				@Override
+				public void onException(Exception exception) {
+					// TODO Auto-generated method stub
+				}
+				
+			});
+		} catch (TTransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return ;
 	}
 }

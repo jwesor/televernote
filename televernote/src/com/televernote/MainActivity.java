@@ -34,12 +34,15 @@ public class MainActivity extends ActionBarActivity {
 		MorseTests.execute();
 		//Set up the Evernote Singleton Session
 		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
-		if (!tryingToLog && !mEvernoteSession.isLoggedIn()) {
-			tryingToLog = true;
-	    	mEvernoteSession.authenticate(this);
-	    }
+		
+		if (mEvernoteSession.isLoggedIn()) {
+			EvernoteInteractor.initializeIfNeeded(this);
+			
+			// Goto screen showing my messages
+			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
+		}
 		else {
-			tryingToLog = true;
+			mEvernoteSession.authenticate(this);
 		}
 	}
 

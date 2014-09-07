@@ -33,7 +33,7 @@
             android:name="com.televernote.activities.ViewMessagesActivity"
             android:label="@string/title_activity_messages" >
 		</activity>
-		<activity>
+		<activity
             android:name="com.televernote.telegraph.ReceiverActivity"
             android:label="@string/title_activity_receiver" >
         </activity>
