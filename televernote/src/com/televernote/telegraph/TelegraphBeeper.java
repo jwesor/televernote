@@ -9,6 +9,11 @@ import android.view.View.OnTouchListener;
 
 import com.televernote.R;
 
+/**
+ * Listener that handles input to the interactive telegraph in Telegraph view.
+ * Can also handle simulated input for replaying messages.
+ * @author jwesor
+ */
 public class TelegraphBeeper implements OnTouchListener {
 
 	private MediaPlayer media;

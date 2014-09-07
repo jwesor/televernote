@@ -3,8 +3,8 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="800px" height="300px" viewBox="0 0 800 300" enable-background="new 0 0 800 300" xml:space="preserve">
-<g id="keyup" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:ns1="http://sozi.baierouge.fr">
-	<g id="layer1" transform="translate(-225.08 -670.45)">
+<g id="keyup" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:svg="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:ns1="http://sozi.baierouge.fr" display="none">
+	<g id="layer1" transform="translate(-225.08 -670.45)" display="inline">
 		<path id="path2830" d="M442.847,931.19c-57.194-4.633-103.052-13.561-129.056-25.119c-20.647-9.18-25.497-14.928-26.126-30.969
 			c-1.141-29.053-0.414-32.01,10.176-41.385c5.583-4.941,10.15-9.922,10.15-11.066c0-1.146-3.916-3.448-8.701-5.116
 			c-7.45-2.599-8.699-4.504-8.699-13.269c0-7.598-1.79-11.407-6.948-14.787c-10.219-6.695-11.365-15.233-3.147-23.451
@@ -195,8 +195,8 @@
 			c2.128,2.953,4.486,4.752,5.24,3.998C517.146,727.782,514.767,723.975,511.103,720.077L511.103,720.077L511.103,720.077z"/>
 	</g>
 </g>
-<g id="keydown" display="none">
-	<g id="layer1_1_" transform="translate(-225.08 -670.45)" display="inline">
+<g id="keydown">
+	<g id="layer1_1_" transform="translate(-225.08 -670.45)">
 		<path id="path2830_1_" d="M442.847,931.19c-57.194-4.633-103.052-13.561-129.056-25.119c-20.647-9.18-25.497-14.928-26.126-30.969
 			c-1.141-29.053-0.414-32.01,10.176-41.385c5.583-4.941,10.15-9.922,10.15-11.066c0-1.146-3.916-3.448-8.701-5.116
 			c-7.45-2.599-8.699-4.504-8.699-13.269c0-7.598-1.79-11.407-6.948-14.787c-10.219-6.695-11.365-15.233-3.147-23.451

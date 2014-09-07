@@ -1,25 +1,33 @@
 package com.televernote.telegraph;
 
+import java.util.Locale;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.TextView;
 
 import com.televernote.R;
 
+/**
+ * Activity for displaying received messages.
+ * @author jwesor
+ */
 public class ReceiverActivity extends TelegraphActivity {
 
 	public static final String TIMESTAMPS_KEY = "timestamps";
 	private static final int INITIAL_DELAY = 1000;
+	public static String SENDER_KEY = "sender";
 
 	private long[] times;
 	private int index;
+	private String sender;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle bundle = getIntent().getExtras();
 		times = bundle.getLongArray("timestamps");
+		sender = bundle.getString(SENDER_KEY);
 		index = 0;
 		button.setText(R.string.replay_message);
 		initialTap();
@@ -32,8 +40,9 @@ public class ReceiverActivity extends TelegraphActivity {
 
 	@Override
 	protected void updateText() {
-		TextView text = (TextView)(findViewById(R.id.morseTicker));
-		text.setText(decoder.getTranslatedMorseBuffer(index >= times.length - 1));
+		String header = getString(R.string.message_sender);
+		header = String.format(header, sender.toUpperCase(Locale.US));
+		text.setText(header + "\n" + decoder.getTranslatedMorseBuffer(index >= times.length - 1));
 	}
 
 	private void initialTap() {

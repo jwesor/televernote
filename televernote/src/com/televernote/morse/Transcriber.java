@@ -6,8 +6,9 @@ import java.util.List;
 
 /**
  * Records taps and converts them to an array of Tap objects.
+ * A Decoder can be attached to a Transcriber so that the decoder will decode taps
+ * as they come in.
  * @author jwesor
- *
  */
 public class Transcriber {
 	private List<Tap> taps;

@@ -6,6 +6,10 @@ import android.widget.ImageView;
 
 import com.televernote.R;
 
+/**
+ * Interactive telegraph image.
+ * @author jwesor
+ */
 public class TelegraphView extends ImageView {
 
 	private boolean down;
