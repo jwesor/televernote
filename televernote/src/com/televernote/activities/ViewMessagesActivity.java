@@ -44,6 +44,7 @@ public class ViewMessagesActivity extends Activity {
         messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	public void onItemClick(AdapterView parent, View view, int position, long id) {
         		//read message at int position
+        		System.out.println("Hit");
         		if (position < messageDatum.size()) {
         			String data = messageDatum.get(position);
         			startViewData(data);
@@ -91,12 +92,13 @@ public class ViewMessagesActivity extends Activity {
         //logOff = (Button) findViewById(R.id.log_off);
     }
 	public void receiveNotes(List<Note> notes) {
+		System.out.println("Received notes");
 		int index = 0;
 		for(Note n: notes) {
 			String title = n.getTitle();
 			messageTitles.add(title);
 			messageAdapter.add(title);
-			EvernoteInteractor.unpackageNodeData(this, n, messageDatum, index);
+			EvernoteInteractor.unpackageNodeData(this, n, this, index);
 			index++;
 		}
 	}
@@ -104,5 +106,9 @@ public class ViewMessagesActivity extends Activity {
 		Intent intent = new Intent(this, ReceiverActivity.class);
 		intent.putExtra(ReceiverActivity.TIMESTAMPS_KEY, data);
 		startActivity(intent);
+	}
+	public void receiveData(String data, int index) {
+		messageDatum.set(index, data);
+		System.out.println("Message received " + index);
 	}
 }

@@ -239,14 +239,14 @@ public class EvernoteInteractor {
 		List<String> tags = new ArrayList<String>();
 		tags.add("televernote");
 		
-		EvernoteSession mEvernoteSession = getSession(context);
-		String name;
+		final EvernoteSession mEvernoteSession = getSession(context);
+		/*String name;
 		for (Notebook notebook: currentNotebooks) {
 			name = notebook.getName();
 			if (name.startsWith(PREFIXER)) {
 				
 			}
-		}
+		}*/
 		NoteFilter filter = new NoteFilter();
 		filter.setOrder(NoteSortOrder.UPDATED.getValue());
 		//filter.setTagGuids(tags);
@@ -258,7 +258,15 @@ public class EvernoteInteractor {
 				public void onSuccess(NoteList data) {
 					// TODO Auto-generated method stub
 					List<Note> notes = data.getNotes();
-					sender.receiveNotes(notes);
+					List<Note> retNotes = new ArrayList<Note>();
+					int userId = mEvernoteSession.getAuthenticationResult().getUserId();
+					for (Note m: notes) {
+						if (m.getAttributes().getCreatorId() != userId) {
+							retNotes.add(m);
+						}
+					}
+					sender.receiveNotes(retNotes);
+					//sender.receiveNotes(notes);
 				}
 
 				@Override
@@ -273,20 +281,21 @@ public class EvernoteInteractor {
 		}
 		
 	}
-	public static void unpackageNodeData(Context context, Note note, final List<String> datums, final int index) {
+	public static void unpackageNodeData(Context context, Note note, final ViewMessagesActivity sender, final int index) {
 		EvernoteSession mEvernoteSession = getSession(context);
 		try {
 			mEvernoteSession.getClientFactory().createNoteStoreClient().getNoteApplicationDataEntry(note.getGuid(),"timestamp data", new OnClientCallback<String>() {
 				@Override
 				public void onSuccess(String data) {
 					// TODO Auto-generated method stub
-					datums.set(index, data);
+					System.out.println("S");
+					sender.receiveData(data, index);
 				}
 
 				@Override
 				public void onException(Exception exception) {
 					// TODO Auto-generated method stub
-					
+					System.out.println("Failed to get timestamp data");
 				}
 				
 			});
