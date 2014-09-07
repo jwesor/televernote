@@ -44,6 +44,7 @@ public class TransmitterActivity extends TelegraphActivity {
 		} catch (TTransportException e) {
 			e.printStackTrace();
 		}
+		finish();
 	}
 
 }
