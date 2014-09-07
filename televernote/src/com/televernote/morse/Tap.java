@@ -3,7 +3,6 @@ package com.televernote.morse;
 /**
  * Represents the base unit of more: a dot, dash, end of character, or space.
  * @author jwesor
- *
  */
 class Tap {
 	private long start, end;

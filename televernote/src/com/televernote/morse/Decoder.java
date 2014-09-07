@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * Converts Taps to a String message, using either the standard Morse table or a custom table.
  * @author jwesor
- *
  */
 public class Decoder {
 	public static long DEFAULT_TIME_UNIT = 75;

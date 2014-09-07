@@ -1,5 +1,9 @@
 package com.televernote.morse;
 
+/**
+ * Basic morse code chars.
+ * @author jwesor
+ */
 enum Morse {
 	DOT, DASH, GAP, CHAR, SPACE;
 
