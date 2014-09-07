@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +17,9 @@ import com.evernote.edam.type.Note;
 import com.evernote.thrift.transport.TTransportException;
 import com.televernote.R;
 import com.televernote.evernote.EvernoteInteractor;
+import com.televernote.morse.Decoder;
 import com.televernote.morse.Transcriber;
+import com.televernote.telegraph.TelegraphActivity;
 
 public class ViewMessagesActivity extends Activity {
 	
@@ -52,15 +55,28 @@ public class ViewMessagesActivity extends Activity {
         	public void onClick(View v) {
     			//startActivity(new Intent(getApplicationContext(), TelegraphActivity.class));
         		System.out.println("Test debug");
-        		EvernoteInteractor.addUser(me, "jwesor@gmail.com");
-        		try {
-					EvernoteInteractor.createNote(me, "03/09/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
-					EvernoteInteractor.createNote(me, "03/31/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
-					EvernoteInteractor.createNote(me, "05/09/1994", "LOL", EvernoteInteractor.getNotebookGUIDForUser("jwesor@gmail.com"));
+        		
+        		//EvernoteInteractor.addUser(me, "jwesor@gmail.com");
+        		/*try {
+        			long d = 75;
+        			Transcriber t = new Transcriber();
+        			Decoder de = new Decoder();
+        			t.setDecoder(de);
+        			t.tap(d*0, d*1);
+        					t.tap(	    d*2, d*5);
+
+        							t.tap(	    d*8, d*11);
+        									t.tap(	    d*12, d*13);
+        											t.tap(	    d*14, d*15);
+        													t.tap(	    d*16, d*17);
+        			
+        			EvernoteInteractor.createNote(me, t.getTitle(), de.getMorseBuffer(), t.getTimestampData(), "jwesor@gmail.com");
 				} catch (TTransportException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
+        		Intent intent = new Intent(me, TelegraphActivity.class);
+        		startActivity(intent);
         	}
         });
         //logOff = (Button) findViewById(R.id.log_off);

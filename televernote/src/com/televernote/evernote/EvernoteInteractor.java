@@ -174,15 +174,19 @@ public class EvernoteInteractor {
 
 		});
 	}
-	public static void createNote(Context context, String title, String content, String data) throws TTransportException {
+	public static void createNote(Context context, String title, String content, String data, String recipient) throws TTransportException {
 		EvernoteSession mEvernoteSession = getSession(context);
-		createNote(mEvernoteSession, title, content, data);
+		createNote(mEvernoteSession, title, content, data, recipient);
 	}
-	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String data) throws TTransportException {
+	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String data, String recipient) throws TTransportException {
 		if (mEvernoteSession.isLoggedIn()) {
+			List<String> tags = new ArrayList<String>();
+			tags.add("televernote");
+			
 			Note note = new Note();
 			note.setTitle(title);
-			note.setNotebookGuid(notebookGuid);
+			String nbGuid = getNotebookGUIDForUser(recipient);
+			note.setNotebookGuid(nbGuid);
 			note.setTagGuids(tags);
 			note.setContent(EvernoteUtil.NOTE_PREFIX + content + EvernoteUtil.NOTE_SUFFIX);
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNote(note, new OnClientCallback<Note>() {

@@ -1,5 +1,6 @@
 package com.televernote;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -7,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.evernote.client.android.EvernoteSession;
+import com.televernote.activities.ViewMessagesActivity;
+import com.televernote.evernote.EvernoteInteractor;
 import com.televernote.morse.Decoder;
 import com.televernote.telegraph.ReceiverActivity;
 import com.televernote.tests.MorseTests;
@@ -68,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	/*
+	
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -97,9 +100,9 @@ public class MainActivity extends ActionBarActivity {
 	    		}
 	    		break;
 		}
-	 */
+	}
 
-	@Override
+	/*@Override
 	public void onResume() {
 		super.onResume();
 		//Intent intent = new Intent(this, TelegraphActivity.class);
@@ -121,5 +124,5 @@ public class MainActivity extends ActionBarActivity {
 		};
 		intent.putExtra(ReceiverActivity.TIMESTAMPS_KEY, timestamps);
 		startActivity(intent);
-	}
+	}*/
 }

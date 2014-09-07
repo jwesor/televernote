@@ -21,7 +21,7 @@ public class TransmitterActivity extends TelegraphActivity {
 	@Override
 	public void buttonPressed(View view) {
 		try {
-			EvernoteInteractor.createNote(this, transcriber.getTitle(), decoder.getMorseBuffer(), transcriber.getTimestampData());
+			EvernoteInteractor.createNote(this, transcriber.getTitle(), decoder.getMorseBuffer(), transcriber.getTimestampData(), "jwesor@gmail.com");
 		} catch (TTransportException e) {
 			e.printStackTrace();
 		}
