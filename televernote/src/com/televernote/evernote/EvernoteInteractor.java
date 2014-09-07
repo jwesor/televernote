@@ -11,14 +11,19 @@ import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.client.android.InvalidAuthenticationException;
 import com.evernote.client.android.OnClientCallback;
+import com.evernote.edam.error.EDAMNotFoundException;
+import com.evernote.edam.error.EDAMSystemException;
+import com.evernote.edam.error.EDAMUserException;
 import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteList;
+import com.evernote.edam.type.LinkedNotebook;
 import com.evernote.edam.type.Note;
 import com.evernote.edam.type.NoteAttributes;
 import com.evernote.edam.type.NoteSortOrder;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.SharedNotebook;
 import com.evernote.edam.type.SharedNotebookPrivilegeLevel;
+import com.evernote.thrift.TException;
 import com.evernote.thrift.transport.TTransportException;
 import com.televernote.activities.ViewMessagesActivity;
 
@@ -286,40 +291,90 @@ public class EvernoteInteractor {
 
 			}
 		}*/
-		NoteFilter filter = new NoteFilter();
-		filter.setOrder(NoteSortOrder.UPDATED.getValue());
-		//filter.setTagGuids(tags);
-		filter.setWords("televernote");
-		filter.setAscending(true);
+
 		try {
-			mEvernoteSession.getClientFactory().createNoteStoreClient().findNotes(filter, 0, 50, new OnClientCallback<NoteList> () {
+			
+			AsyncNoteStoreClient store = mEvernoteSession.getClientFactory().createNoteStoreClient();
+			store.listLinkedNotebooks(new OnClientCallback<List<LinkedNotebook>>() {
 				@Override
-				public void onSuccess(NoteList data) {
+				public void onSuccess(List<LinkedNotebook> data) {
 					// TODO Auto-generated method stub
-					List<Note> notes = data.getNotes();
-					List<Note> retNotes = new ArrayList<Note>();
-					int userId = mEvernoteSession.getAuthenticationResult().getUserId();
-					System.out.println("My User ID: "+userId);
-					for (Note m: notes) {
-						m.getAttributes().getSourceURL();
-						System.out.println("Note ID: "+m.getAttributes().getCreatorId());
-						//System.out.println("Note ID: "+m.getCreated());
-						//if (m.getAttributes().getCreatorId() != userId) {
-						//if (m.getCreated() != userId) {
-						if (isNotebookLinked(m.getNotebookGuid())) {
-							retNotes.add(m);
+					final List<Note> retNotes = new ArrayList<Note>();
+					int index = 0;
+					for (LinkedNotebook linked: data) {
+						index++;
+						final boolean end = (index == data.size() - 1);
+						
+						try {
+							mEvernoteSession.getClientFactory().createLinkedNoteStoreClient(linked);
+						} catch (EDAMUserException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (EDAMSystemException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (TException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (EDAMNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
+						NoteFilter filter = new NoteFilter();
+						filter.setOrder(NoteSortOrder.UPDATED.getValue());
+						//filter.setTagGuids(tags);
+						filter.setWords("televernote");
+						filter.setAscending(true);
+						try {
+							mEvernoteSession.getClientFactory().createNoteStoreClient().findNotes(filter, 0, 50, new OnClientCallback<NoteList> () {
+								@Override
+								public void onSuccess(NoteList data) {
+									// TODO Auto-generated method stub
+									List<Note> notes = data.getNotes();
+									int userId = mEvernoteSession.getAuthenticationResult().getUserId();
+									System.out.println("My User ID: "+userId);
+									for (Note m: notes) {
+										m.getAttributes().getSourceURL();
+										System.out.println("Note ID: "+m.getAttributes().getCreatorId());
+										//System.out.println("Note ID: "+m.getCreated());
+										//if (m.getAttributes().getCreatorId() != userId) {
+										//if (m.getCreated() != userId) {
+										if (isNotebookLinked(m.getNotebookGuid())) {
+											retNotes.add(m);
+										}
+									}
+									if (end) {
+										sender.receiveNotes(notes);
+									}
+									//sender.receiveNotes(notes);
+								}
+
+								@Override
+								public void onException(Exception exception) {
+									// TODO Auto-generated method stub
+								}
+
+							});
+						} catch (TTransportException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						
 					}
 					sender.receiveNotes(retNotes);
-					//sender.receiveNotes(notes);
 				}
 
 				@Override
 				public void onException(Exception exception) {
 					// TODO Auto-generated method stub
+					
 				}
-
+				
 			});
+			
+			
+			
 		} catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
