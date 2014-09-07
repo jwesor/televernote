@@ -12,8 +12,9 @@
         android:id="@+id/morseTicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/telegraphView"
+        android:layout_above="@+id/telegraphButton"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:gravity="center_horizontal|top" />
 
     <com.televernote.telegraph.TelegraphView
@@ -25,5 +26,14 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/telegraph"
         android:src="@drawable/telegraph_key" />
+
+    <Button
+        android:id="@+id/telegraphButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/telegraphView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/send_message"
+        android:onClick="buttonPressed" />
 
 </RelativeLayout>

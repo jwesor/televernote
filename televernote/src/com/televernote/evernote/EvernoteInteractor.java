@@ -24,7 +24,7 @@ public class EvernoteInteractor {
 	private static final String PREFIXER = "Televernote: ";
 	
 	private static final String LOGTAG = "EvernoteInteractor";
-	
+
 	private static final String CONSUMER_KEY = "eric5-5494";
 	private static final String CONSUMER_SECRET = "2b514688c7e57a5d";
 
@@ -33,14 +33,14 @@ public class EvernoteInteractor {
 	private static final boolean SUPPORT_APP_LINKED_NOTEBOOKS = true;
 
 	private static List<Notebook> currentNotebooks;
-	
+
 	// Current evernote session
 
 	private static EvernoteSession getSession(Context session) {
 		return EvernoteSession.getInstance(session, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
 	}
 	//methods to interact with evernote API
-	
+
 	public static boolean isLogged(Context session) {
 		return getSession(session).isLoggedIn();
 	}
@@ -56,32 +56,32 @@ public class EvernoteInteractor {
 					List<String> namesList = new ArrayList<String>(notebooks.size());
 					boolean hasInitial = false;
 					currentNotebooks = notebooks.subList(0, notebooks.size());
-			        for (Notebook notebook : notebooks) {
-			        	namesList.add(notebook.getName());
-			        	//lol@hardcoded in strings
-			        	if (notebook.getName().equals("Televernote Info")) {
-			        		hasInitial = true;
-			        	}
-			        }
-			        if (!hasInitial) {
-			        	//make new notes
-			        	try {
+					for (Notebook notebook : notebooks) {
+						namesList.add(notebook.getName());
+						//lol@hardcoded in strings
+						if (notebook.getName().equals("Televernote Info")) {
+							hasInitial = true;
+						}
+					}
+					if (!hasInitial) {
+						//make new notes
+						try {
 							//createNote(mEvernoteSession, "Televernote Info", "Televernote!");
-			        		createNotebook(mEvernoteSession, "Televernote Info");
+							createNotebook(mEvernoteSession, "Televernote Info");
 						} catch (TTransportException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-			        }
+					}
 				}
 				@Override
 				public void onException(Exception e) {
 					Log.e(LOGTAG, "Error retrieving notebooks", e);
 				}
 			});
-			
+
 			//AsyncUserStoreClient store1= getSession(session).getClientFactory().createUserStoreClient();
-			
+
 		} catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,13 +98,13 @@ public class EvernoteInteractor {
         	}
         }
 		try {
-			
+
 			Notebook notebook = new Notebook();
 			notebook.setGuid(notebook.getGuid());
 			notebook.setName(PREFIXER+user);
 			notebook.setStack("Televernote");
-			
-			
+
+
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNotebook(notebook,  new OnClientCallback<Notebook>() {
 				@Override
 				public void onSuccess(Notebook data) {
@@ -120,16 +120,16 @@ public class EvernoteInteractor {
 							@Override
 							public void onSuccess(SharedNotebook data) {
 								// TODO Auto-generated method stub
-								
+
 							}
 
 							@Override
 							public void onException(Exception exception) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
-						
+
+
 						});
 					} catch (TTransportException e) {
 						// TODO Auto-generated catch block
@@ -139,12 +139,12 @@ public class EvernoteInteractor {
 				@Override
 				public void onException(Exception exception) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 			});
-			
-			
+
+
 		} catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,7 +159,7 @@ public class EvernoteInteractor {
 		notebook.setGuid(notebook.getGuid());
 		notebook.setName(name);
 		notebook.setStack("Televernote");
-		
+
 		mEvernoteSession.getClientFactory().createNoteStoreClient().createNotebook(notebook,  new OnClientCallback<Notebook>() {
 			@Override
 			public void onSuccess(Notebook data) {
@@ -169,18 +169,16 @@ public class EvernoteInteractor {
 			@Override
 			public void onException(Exception exception) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		});
 	}
-	public static void createNote(Context context, String title, String content, String notebookGuid) throws TTransportException {
+	public static void createNote(Context context, String title, String content, String data) throws TTransportException {
 		EvernoteSession mEvernoteSession = getSession(context);
-		createNote(mEvernoteSession, title, content, notebookGuid);
+		createNote(mEvernoteSession, title, content, data);
 	}
-	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String notebookGuid) throws TTransportException {
-		List<String> tags = new ArrayList<String>();
-		tags.add("televernote");
+	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String data) throws TTransportException {
 		if (mEvernoteSession.isLoggedIn()) {
 			Note note = new Note();
 			note.setTitle(title);
@@ -191,7 +189,7 @@ public class EvernoteInteractor {
 				@Override
 				public void onSuccess(final Note data) {
 					//Toast.makeText(getApplicationContext(), data.getTitle() + " has been created", Toast.LENGTH_LONG).show();
-				}	
+				}
 				@Override
 				public void onException(Exception exception) {
 					Log.e(LOGTAG, "Error creating note", exception);
