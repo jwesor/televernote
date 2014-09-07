@@ -24,6 +24,7 @@ public class TransmitterActivity extends TelegraphActivity {
 		super.onCreate(savedInstanceState);
 		Bundle bundle = getIntent().getExtras();
 		recipient = bundle.getString(RECIPIENT_KEY);
+		updateText();
 	}
 	@Override
 	protected void setTelegraphTouchListener() {

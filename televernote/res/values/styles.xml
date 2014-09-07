@@ -14,7 +14,9 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowBackground">@drawable/paper</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

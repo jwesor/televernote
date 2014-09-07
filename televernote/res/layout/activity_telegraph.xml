@@ -15,7 +15,8 @@
         android:layout_above="@+id/telegraphButton"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal|top" />
+        android:gravity="center_horizontal|top"
+        android:textSize="@dimen/message_text_size" />
 
     <com.televernote.telegraph.TelegraphView
         android:id="@+id/telegraphView"
