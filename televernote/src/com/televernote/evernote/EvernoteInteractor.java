@@ -13,6 +13,7 @@ import com.evernote.client.android.OnClientCallback;
 import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
+import com.evernote.edam.type.NoteSortOrder;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.SharedNotebook;
 import com.evernote.edam.type.SharedNotebookPrivilegeLevel;
@@ -178,7 +179,7 @@ public class EvernoteInteractor {
 		EvernoteSession mEvernoteSession = getSession(context);
 		createNote(mEvernoteSession, title, content, data, recipient);
 	}
-	public static void createNote(EvernoteSession mEvernoteSession, String title, String content, String data, String recipient) throws TTransportException {
+	public static void createNote(final EvernoteSession mEvernoteSession, String title, String content, final String timeData, String recipient) throws TTransportException {
 		if (mEvernoteSession.isLoggedIn()) {
 			List<String> tags = new ArrayList<String>();
 			tags.add("televernote");
@@ -187,12 +188,32 @@ public class EvernoteInteractor {
 			note.setTitle(title);
 			String nbGuid = getNotebookGUIDForUser(recipient);
 			note.setNotebookGuid(nbGuid);
-			note.setTagGuids(tags);
+			//note.setTagGuids(tags);
+			note.setTagNames(tags);
 			note.setContent(EvernoteUtil.NOTE_PREFIX + content + EvernoteUtil.NOTE_SUFFIX);
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNote(note, new OnClientCallback<Note>() {
 				@Override
 				public void onSuccess(final Note data) {
 					//Toast.makeText(getApplicationContext(), data.getTitle() + " has been created", Toast.LENGTH_LONG).show();
+					try {
+						mEvernoteSession.getClientFactory().createNoteStoreClient().setNoteApplicationDataEntry(data.getGuid(), "timestamp data", timeData, new OnClientCallback<Integer>() {
+							@Override
+							public void onSuccess(Integer data) {
+								// TODO Auto-generated method stub
+								
+							}
+
+							@Override
+							public void onException(Exception exception) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+						});
+					} catch (TTransportException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				@Override
 				public void onException(Exception exception) {
@@ -227,7 +248,9 @@ public class EvernoteInteractor {
 			}
 		}
 		NoteFilter filter = new NoteFilter();
-		filter.setTagGuids(tags);
+		filter.setOrder(NoteSortOrder.UPDATED.getValue());
+		//filter.setTagGuids(tags);
+		filter.setWords("televernote");
 		filter.setAscending(true);
 		try {
 			mEvernoteSession.getClientFactory().createNoteStoreClient().findNotes(filter, 0, 50, new OnClientCallback<NoteList> () {
@@ -249,6 +272,27 @@ public class EvernoteInteractor {
 			e.printStackTrace();
 		}
 		
-		return ;
+	}
+	public static void unpackageNodeData(Context context, Note note, final List<String> datums, final int index) {
+		EvernoteSession mEvernoteSession = getSession(context);
+		try {
+			mEvernoteSession.getClientFactory().createNoteStoreClient().getNoteApplicationDataEntry(note.getGuid(),"timestamp data", new OnClientCallback<String>() {
+				@Override
+				public void onSuccess(String data) {
+					// TODO Auto-generated method stub
+					datums.set(index, data);
+				}
+
+				@Override
+				public void onException(Exception exception) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+		} catch (TTransportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

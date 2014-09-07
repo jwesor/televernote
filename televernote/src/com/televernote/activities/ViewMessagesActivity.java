@@ -19,7 +19,9 @@ import com.televernote.R;
 import com.televernote.evernote.EvernoteInteractor;
 import com.televernote.morse.Decoder;
 import com.televernote.morse.Transcriber;
+import com.televernote.telegraph.ReceiverActivity;
 import com.televernote.telegraph.TelegraphActivity;
+import com.televernote.telegraph.TransmitterActivity;
 
 public class ViewMessagesActivity extends Activity {
 	
@@ -27,7 +29,7 @@ public class ViewMessagesActivity extends Activity {
 	
 	private Button newMessage;
 	
-	private List<Transcriber> messages;
+	private List<String> messageDatum;
 	private List<String> messageTitles;
 	private ArrayAdapter<String> messageAdapter;
 	
@@ -35,19 +37,25 @@ public class ViewMessagesActivity extends Activity {
         super.onCreate(savedInstanceState);
         
         messageTitles = new ArrayList<String>();
-        messages = new ArrayList<Transcriber>();
+        messageDatum = new ArrayList<String>();
         
         setContentView(R.layout.view_messages);
         messagesView = (ListView) findViewById(R.id.message_list);
         messagesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         	public void onItemClick(AdapterView parent, View view, int position, long id) {
         		//read message at int position
-        		Transcriber msg = messages.get(position);
+        		if (position < messageDatum.size()) {
+        			String data = messageDatum.get(position);
+        			startViewData(data);
+        		}
         		//open this message
         	}
 		});
         messageAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, messageTitles);
         messagesView.setAdapter(messageAdapter);
+        
+        //start fetching messages
+        EvernoteInteractor.getAllMessages(this, this);
         
         newMessage = (Button) findViewById(R.id.new_button);
         final Context me = this;
@@ -75,19 +83,26 @@ public class ViewMessagesActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}*/
-        		Intent intent = new Intent(me, TelegraphActivity.class);
+        		Intent intent = new Intent(me, TransmitterActivity.class);
+        		intent.putExtra(TransmitterActivity.RECIPIENT_KEY, "jwesor@gmail.com");
         		startActivity(intent);
         	}
         });
         //logOff = (Button) findViewById(R.id.log_off);
     }
-	public void addMessageToListView(Transcriber msg) {
-		messages.add(msg);
-		String title = msg.getTitle();
-		messageTitles.add(title);
-		messageAdapter.add(title);
-	}
 	public void receiveNotes(List<Note> notes) {
-		
+		int index = 0;
+		for(Note n: notes) {
+			String title = n.getTitle();
+			messageTitles.add(title);
+			messageAdapter.add(title);
+			EvernoteInteractor.unpackageNodeData(this, n, messageDatum, index);
+			index++;
+		}
+	}
+	public void startViewData(String data) {
+		Intent intent = new Intent(this, ReceiverActivity.class);
+		intent.putExtra(ReceiverActivity.TIMESTAMPS_KEY, data);
+		startActivity(intent);
 	}
 }
