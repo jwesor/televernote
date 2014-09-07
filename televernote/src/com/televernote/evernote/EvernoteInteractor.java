@@ -9,6 +9,7 @@ import android.util.Log;
 import com.evernote.client.android.AsyncNoteStoreClient;
 import com.evernote.client.android.EvernoteSession;
 import com.evernote.client.android.EvernoteUtil;
+import com.evernote.client.android.InvalidAuthenticationException;
 import com.evernote.client.android.OnClientCallback;
 import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteList;
@@ -21,9 +22,9 @@ import com.evernote.thrift.transport.TTransportException;
 import com.televernote.activities.ViewMessagesActivity;
 
 public class EvernoteInteractor {
-	
+
 	private static final String PREFIXER = "Televernote: ";
-	
+
 	private static final String LOGTAG = "EvernoteInteractor";
 
 	private static final String CONSUMER_KEY = "eric5-5494";
@@ -45,7 +46,15 @@ public class EvernoteInteractor {
 	public static boolean isLogged(Context session) {
 		return getSession(session).isLoggedIn();
 	}
-	//called every time app is started; checks that necessary files are in place
+	public static void logOut(Context ctx) {
+		try {
+			getSession(ctx).logOut(ctx);
+		} catch (InvalidAuthenticationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	//called every time app is started; check {s that necessary files are in place
 	//if not, makes such necessary files
 	public static void initializeIfNeeded(Context session) {
 		final EvernoteSession mEvernoteSession = getSession(session);
@@ -93,11 +102,11 @@ public class EvernoteInteractor {
 		final String f_user = user;
 		final EvernoteSession mEvernoteSession = getSession(context);
 		for (Notebook notebook : currentNotebooks) {
-        	if (notebook.getName().equals(PREFIXER+"user")) {
-        		//already have this user added
-        		return;
-        	}
-        }
+			if (notebook.getName().equals(PREFIXER+"user")) {
+				//already have this user added
+				return;
+			}
+		}
 		try {
 
 			Notebook notebook = new Notebook();
@@ -183,7 +192,7 @@ public class EvernoteInteractor {
 		if (mEvernoteSession.isLoggedIn()) {
 			List<String> tags = new ArrayList<String>();
 			tags.add("televernote");
-			
+
 			Note note = new Note();
 			//note.setTitle(title);
 			if (content.length() >= 5) {
@@ -206,15 +215,15 @@ public class EvernoteInteractor {
 							@Override
 							public void onSuccess(Integer data) {
 								// TODO Auto-generated method stub
-								
+
 							}
 
 							@Override
 							public void onException(Exception exception) {
 								// TODO Auto-generated method stub
-								
+
 							}
-							
+
 						});
 					} catch (TTransportException e) {
 						// TODO Auto-generated catch block
@@ -244,13 +253,13 @@ public class EvernoteInteractor {
 	public static void getAllMessages(Context context, final ViewMessagesActivity sender) {
 		List<String> tags = new ArrayList<String>();
 		tags.add("televernote");
-		
+
 		final EvernoteSession mEvernoteSession = getSession(context);
 		/*String name;
 		for (Notebook notebook: currentNotebooks) {
 			name = notebook.getName();
 			if (name.startsWith(PREFIXER)) {
-				
+
 			}
 		}*/
 		NoteFilter filter = new NoteFilter();
@@ -279,13 +288,13 @@ public class EvernoteInteractor {
 				public void onException(Exception exception) {
 					// TODO Auto-generated method stub
 				}
-				
+
 			});
 		} catch (TTransportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	public static void unpackageNodeData(Context context, Note note, final ViewMessagesActivity sender, final int index) {
 		EvernoteSession mEvernoteSession = getSession(context);
@@ -303,7 +312,7 @@ public class EvernoteInteractor {
 					// TODO Auto-generated method stub
 					System.out.println("Failed to get timestamp data");
 				}
-				
+
 			});
 		} catch (TTransportException e) {
 			// TODO Auto-generated catch block

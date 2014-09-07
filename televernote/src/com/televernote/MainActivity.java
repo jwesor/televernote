@@ -10,8 +10,6 @@ import android.view.MenuItem;
 import com.evernote.client.android.EvernoteSession;
 import com.televernote.activities.ViewMessagesActivity;
 import com.televernote.evernote.EvernoteInteractor;
-import com.televernote.morse.Decoder;
-import com.televernote.telegraph.ReceiverActivity;
 import com.televernote.tests.MorseTests;
 
 
@@ -36,12 +34,13 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		MorseTests.execute();
+
 		//Set up the Evernote Singleton Session
 		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE, SUPPORT_APP_LINKED_NOTEBOOKS);
-		
+
 		if (mEvernoteSession.isLoggedIn()) {
 			EvernoteInteractor.initializeIfNeeded(this);
-			
+
 			// Goto screen showing my messages
 			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
 		}
@@ -51,6 +50,10 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,34 +74,32 @@ public class MainActivity extends ActionBarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		System.out.println("Resuming");
-	}
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch(requestCode) {
-	    	// Update UI when oauth activity returns result
-	    	case EvernoteSession.REQUEST_CODE_OAUTH:
-	    		if (resultCode == Activity.RESULT_OK) {
-	    			System.out.println("Logged successfully");
-	    			// Authentication was successful, do what you need to do in your app
+		// Update UI when oauth activity returns result
+		case EvernoteSession.REQUEST_CODE_OAUTH:
+			if (resultCode == Activity.RESULT_OK) {
+				System.out.println("Logged successfully");
+				// Authentication was successful, do what you need to do in your app
 
-	    			//check if this is the first time user is using this app; set up appropriate stacks
-	    			EvernoteInteractor.initializeIfNeeded(this);
+				//check if this is the first time user is using this app; set up appropriate stacks
+				EvernoteInteractor.initializeIfNeeded(this);
 
-	    			// Goto screen showing my messages
-	    			startActivity(new Intent(getApplicationContext(), ViewMessagesActivity.class));
-	    		}
-	    		else {
-	    			System.out.println("??");
-	    			// Goto screen prompting user to log in?
-	    			//startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-	    		}
-	    		break;
+				// Goto screen showing my messages
+				startActivityForResult(new Intent(getApplicationContext(), ViewMessagesActivity.class), ViewMessagesActivity.VIEW_MESSAGES);
+			}
+			else {
+				System.out.println("??");
+				// Goto screen prompting user to log in?
+				//startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+			}
+			break;
+		case ViewMessagesActivity.VIEW_MESSAGES:
+			finish();
+			break;
 		}
 	}
 
