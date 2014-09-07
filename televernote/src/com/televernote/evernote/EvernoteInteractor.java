@@ -14,6 +14,7 @@ import com.evernote.client.android.OnClientCallback;
 import com.evernote.edam.notestore.NoteFilter;
 import com.evernote.edam.notestore.NoteList;
 import com.evernote.edam.type.Note;
+import com.evernote.edam.type.NoteAttributes;
 import com.evernote.edam.type.NoteSortOrder;
 import com.evernote.edam.type.Notebook;
 import com.evernote.edam.type.SharedNotebook;
@@ -194,22 +195,36 @@ public class EvernoteInteractor {
 			tags.add("televernote");
 
 			Note note = new Note();
-			//note.setTitle(title);
-			if (content.length() >= 5) {
+			note.setTitle(title);
+			/*if (content.length() >= 5) {
 				note.setTitle(content.substring(0, 4));
 			}
 			else {
 				note.setTitle(content);
-			}
+			}*/
 			String nbGuid = getNotebookGUIDForUser(recipient);
 			note.setNotebookGuid(nbGuid);
+			//note.getAttributes().setCreatorId(userId);
 			//note.setTagGuids(tags);
+			
+			NoteAttributes attr;
+			int userId = mEvernoteSession.getAuthenticationResult().getUserId();
+			if (note.getAttributes() == null) {
+				attr = new NoteAttributes();
+			}
+			else {
+				attr = note.getAttributes();	
+			}
+			attr.setCreatorId(userId);
+			note.setAttributes(attr);
+
 			note.setTagNames(tags);
 			note.setContent(EvernoteUtil.NOTE_PREFIX + content + EvernoteUtil.NOTE_SUFFIX);
 			mEvernoteSession.getClientFactory().createNoteStoreClient().createNote(note, new OnClientCallback<Note>() {
 				@Override
 				public void onSuccess(final Note data) {
 					//Toast.makeText(getApplicationContext(), data.getTitle() + " has been created", Toast.LENGTH_LONG).show();
+					//note.setCreated(userId);
 					try {
 						mEvernoteSession.getClientFactory().createNoteStoreClient().setNoteApplicationDataEntry(data.getGuid(), "timestamp", timeData, new OnClientCallback<Integer>() {
 							@Override
@@ -250,6 +265,15 @@ public class EvernoteInteractor {
 		}
 		return "";
 	}
+	public static boolean isNotebookLinked(String guid) {
+		String name;
+		for (Notebook notebook: currentNotebooks) {
+			if (notebook.getGuid().equals(guid)) {
+				return !notebook.isSetSharedNotebookIds();
+			}
+		}
+		return true;
+	}
 	public static void getAllMessages(Context context, final ViewMessagesActivity sender) {
 		List<String> tags = new ArrayList<String>();
 		tags.add("televernote");
@@ -275,8 +299,14 @@ public class EvernoteInteractor {
 					List<Note> notes = data.getNotes();
 					List<Note> retNotes = new ArrayList<Note>();
 					int userId = mEvernoteSession.getAuthenticationResult().getUserId();
+					System.out.println("My User ID: "+userId);
 					for (Note m: notes) {
-						if (m.getAttributes().getCreatorId() != userId) {
+						m.getAttributes().getSourceURL();
+						System.out.println("Note ID: "+m.getAttributes().getCreatorId());
+						//System.out.println("Note ID: "+m.getCreated());
+						//if (m.getAttributes().getCreatorId() != userId) {
+						//if (m.getCreated() != userId) {
+						if (isNotebookLinked(m.getNotebookGuid())) {
 							retNotes.add(m);
 						}
 					}
